@@ -34,6 +34,8 @@ exports.createMessage = async (req, res) => {
             //remplacer l'id 1 par user.id
              UserId: 1,
         });
+
+        
         res.status(201).json({ post: 'votre message est bien envoyé'});
      }catch(error) {
          return res.status(500).send(console.log(error));
