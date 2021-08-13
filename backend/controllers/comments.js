@@ -20,11 +20,9 @@ exports.getAllComment = async (req, res,) => {
         });
         res.status(200).send(comment);
     } catch (error) {
-        return res.status(500).send( console.log(error));
+        return res.status(500).send( { error : "Une erreur c'est produite à la récupération des commentaires ! "});
     }
-};
-
-// { error : "Une erreur c'est produite à la récupération des commentaires ! "}
+}; 
 
 exports.createComment = async (req, res) => {
     //récupérer l'userId

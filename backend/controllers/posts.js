@@ -7,16 +7,29 @@ exports.getAllPosts = async (req, res,) => {
         const posts = await models.Post.findAll({
             attributes: ['id', 'post', 'title', 'createdAt'],
             order: [["createdAt",'DESC']],
-            include: [{
+            include: [
+                {
                     model: models.User,
                     attributes: ['name', 'id'],
-                }],
+                },
+                {
+                    model: models.Comment,
+                    attributes : ['content', 'id', 'createdAt', 'UserId'],
+                    order: ['createdAt', 'DESC'],
+                    include: [{
+                        model: models.User,
+                        attributes: ['name'],
+                    }]
+                }
+            ],
         });
         res.status(200).send(posts);
     } catch (error) {
-        return res.status(500).send({ error : "Une erreur c'est produite à la récupération des messages ! "});
+        return res.status(500).send(console.log(error));
     }
 };
+
+// { error : "Une erreur c'est produite à la récupération des messages ! "}
 
 exports.createPost = async (req, res) => {
     //récupérer l'user_id
