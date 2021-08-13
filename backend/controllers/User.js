@@ -1,4 +1,3 @@
-const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 require('dotenv').config({path: '.env.local'});
@@ -70,3 +69,51 @@ exports.signup = async (req, res) => {
       return res.status(500).send({ error: "Erreur serveur" });
     }
   };
+
+  exports.deleteAccount = async (req, res) => {
+    try{
+      const id = req.params.id;
+      const user = await models.User.findOne({ where : {id : id} });
+      if(user == null) {
+        return res.status(409).json({ message : "Ce compte n'éxiste pas ! "})
+      }else{
+        models.User.destroy({ where : { id : id}});
+        res.status(200).json({message : 'Compte utilisateur suprimé ! '})
+      }
+    } catch(error) {
+        return res.status(500).send({error :"Le compte n'a pas pus être trouvé ! "})
+      }
+      
+  };
+
+  exports.updateAccount = async (req, res ) => {
+    const id = req.params.id;
+    console.log(id)
+    try{
+      // const userId = token.getUserId(req);
+      let user = await models.User.findOne({ where : {id : id}});
+      console.log(user.id)
+      if( id == user.id) {
+        if (req.body.name) {
+          user.name = req.body.name;
+        }
+        if (req.body.email) {
+          user.email = req.body.email;
+        }
+        if (req.body.password) {
+          user.password = req.body.password;
+        }
+        const newUser = await user.save({ fields: ["name", "email", "password"] }); 
+        res.status(200).json({
+          user: newUser,
+          messageRetour: "Votre profil a bien été modifié",
+        });
+      }else{
+        return res.status(409).json({message :" Profil non modifié"})
+      }
+    }catch (error) {
+      return res.status(500).json(console.log(error))
+    }
+
+  };
+  // { message : " Erreur serveur"}
