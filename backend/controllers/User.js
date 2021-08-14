@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 require('dotenv').config({path: '.env'});
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
+const { Op } = require("sequelize");
 
 const models = require('../models');
 
@@ -113,8 +114,22 @@ exports.signup = async (req, res) => {
         return res.status(409).json({message :" Profil non modifié"})
       }
     }catch (error) {
-      return res.status(500).json(console.log(error))
+      return res.status(500).json({ message : " Erreur serveur"})
     }
-
   };
-  // { message : " Erreur serveur"}
+
+  exports.getAllUser = async (req, res) => {
+    try{
+      const users = await models.User.findAll({
+        attributes : [ "name", 'id', 'email', 'createdAt'],
+        where: { 
+          admin: {
+            [Op.not]: 1,
+          }
+        }
+      });
+      res.status(200).send(users);
+    }catch (error){
+      return res.status(500).json(console.log(error));
+    }
+  };

@@ -1,7 +1,7 @@
 const models = require('../models');
 const getUserId = require('../middleware/getUser');
 
-
+//utilisé pour le developement de l'app
 exports.getAllComment = async (req, res,) => {
     //faire en sorte de récupérer tout les commentaire d'un seul post
     try{
