@@ -25,11 +25,38 @@ exports.getAllPosts = async (req, res,) => {
         });
         res.status(200).send(posts);
     } catch (error) {
-        return res.status(500).send(console.log(error));
+        return res.status(500).send({ error : "Une erreur c'est produite à la récupération des messages ! "});
     }
 };
 
-// { error : "Une erreur c'est produite à la récupération des messages ! "}
+exports.getOnePost = async (req, res ) => {
+    try{
+        const post = await models.Post.findOne({
+            where : { id : req.params.id},
+            include: [
+                {
+                    model : models.User,
+                    attributes: [ 'name', 'id', 'createdAt']
+                },
+                {
+                    model: models.Comment,
+                    attributes: [ 'createdAt','content', 'Userid'],
+                    order: ["createdAt", 'DESC'],
+                    include: [
+                        {
+                            model: models.User,
+                            attributes: ['name']
+                        }
+                    ]
+                }
+            ]
+        })
+        res.status(200).send(post)
+    }catch (error){
+        return rs.status(500).json(console.log(error))
+    }
+};
+// {error : "Le post n'éxiste pas"}
 
 exports.createPost = async (req, res) => {
     //récupérer l'user_id
