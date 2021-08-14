@@ -3,6 +3,7 @@ const fs = require('fs');
 const { send } = require('process');
 
 exports.getAllComment = async (req, res,) => {
+    //faire en sorte de récupérer tout les commentaire d'un seul post
     try{
         const comment = await models.Comment.findAll({
             attributes: ['id', 'content', 'createdAt'],
@@ -25,10 +26,10 @@ exports.getAllComment = async (req, res,) => {
 }; 
 
 exports.createComment = async (req, res) => {
-    //récupérer l'userId
+    // récupérer l'userId 
     // const user = await models.User.findOne({
     //     attributes: ['name', 'id'],
-    //     where: { id: userId},
+    //     where: { id: user.id},
     // });
     try{
         const post = await models.Comment.create({
@@ -44,7 +45,7 @@ exports.createComment = async (req, res) => {
             ],
             content : req.body.content,
             //remplacer l'id 1 par userId
-             UserId: 1,
+             UserId: 3,
              PostId: 1,
         });
         res.status(201).json({ post: 'Votre commentaire est bien envoyé'});

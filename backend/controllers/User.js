@@ -1,11 +1,9 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-require('dotenv').config({path: '.env.local'});
+require('dotenv').config({path: '.env'});
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
-const connectDB = require('../models');
-const { Op } = require("sequelize");
+
 const models = require('../models');
-const fs = require("fs");
 
 
 exports.signup = async (req, res) => {
@@ -27,13 +25,14 @@ exports.signup = async (req, res) => {
           password: hash,
            admin: false,
         });
-  
-        // const tokenObject = await token.issueJWT(newUser);
         res.status(201).send({
           user: newUser,
-        //   token: tokenObject.token,
-        //   expires: tokenObject.expiresIn,
-          message: `Votre compte est bien créé ${newUser.pseudo} !`,
+           token: jwt.sign(
+              { userId : user.id},
+              SECRET_TOKEN,
+              { expiresIn : '12h'}
+            ),
+          message: `Votre compte est bien créé ${newUser.name} !`,
         });
       }
     } catch (error) {
@@ -54,21 +53,23 @@ exports.signup = async (req, res) => {
         if (!hash) {
           return res.status(401).send({ error: "Mot de passe incorrect !" });
         } else {
-        //   const tokenObject = await token.issueJWT(user);
+          console.log(user.id)
           res.status(200).send({
-            // on renvoie le user et le token
             user: user,
-            // token: tokenObject.token,
-            // sub: tokenObject.sub,
-            // expires: tokenObject.expiresIn,
+            token: jwt.sign(
+              { userId : user.id},
+              SECRET_TOKEN,
+              { expiresIn : '12h'}
+            ),
             message: "Bonjour " + user.name + " !",
           });
         }
       }
     } catch (error) {
-      return res.status(500).send({ error: "Erreur serveur" });
+      return res.status(500).send(console.log(error));
     }
   };
+  // { error: "Erreur serveur" }
 
   exports.deleteAccount = async (req, res) => {
     try{
