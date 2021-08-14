@@ -1,6 +1,5 @@
 const models = require('../models');
-const fs = require('fs');
-const { send } = require('process');
+const getUserId = require('../middleware/getUser');
 
 exports.getAllPosts = async (req, res,) => {
     try{
@@ -53,17 +52,12 @@ exports.getOnePost = async (req, res ) => {
         })
         res.status(200).send(post)
     }catch (error){
-        return rs.status(500).json(console.log(error))
+        return rs.status(500).json({error : "Le post n'éxiste pas"})
     }
 };
-// {error : "Le post n'éxiste pas"}
 
 exports.createPost = async (req, res) => {
-    //récupérer l'user_id
-    // const user = await models.User.findOne({
-    //     attributes: ['name', 'id'],
-    //     where: { id: user_id},
-    // });
+   const userId = getUserId(req);
     try{
         const post = await models.Post.create({
             include:[{
@@ -72,11 +66,8 @@ exports.createPost = async (req, res) => {
             }],
             title: req.body.title,
             post : req.body.post,
-            //remplacer l'id 1 par user.id
-             UserId: 1,
+             UserId: userId,
         });
-
-        
         res.status(201).json({ post: 'votre message est bien envoyé'});
      }catch(error) {
          return res.status(500).send(console.log(error));

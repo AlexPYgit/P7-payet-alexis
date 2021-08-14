@@ -1,6 +1,6 @@
 const models = require('../models');
-const fs = require('fs');
-const { send } = require('process');
+const getUserId = require('../middleware/getUser');
+
 
 exports.getAllComment = async (req, res,) => {
     //faire en sorte de récupérer tout les commentaire d'un seul post
@@ -26,11 +26,8 @@ exports.getAllComment = async (req, res,) => {
 }; 
 
 exports.createComment = async (req, res) => {
-    // récupérer l'userId 
-    // const user = await models.User.findOne({
-    //     attributes: ['name', 'id'],
-    //     where: { id: user.id},
-    // });
+    const userId = getUserId(req);
+    const postId = req.params.id
     try{
         const post = await models.Comment.create({
             include:[
@@ -44,9 +41,8 @@ exports.createComment = async (req, res) => {
                 }
             ],
             content : req.body.content,
-            //remplacer l'id 1 par userId
-             UserId: 3,
-             PostId: 1,
+             UserId: userId,
+             PostId: postId,
         });
         res.status(201).json({ post: 'Votre commentaire est bien envoyé'});
      }catch(error) {
