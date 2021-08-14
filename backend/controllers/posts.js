@@ -68,9 +68,28 @@ exports.createPost = async (req, res) => {
             post : req.body.post,
              UserId: userId,
         });
-        res.status(201).json({ post: 'votre message est bien envoyé'});
+        res.status(201).json({ post: 'Votre message est bien envoyé'});
      }catch(error) {
-         return res.status(500).send(console.log(error));
+         return res.status(500).json({message : "Votre post n'a pas pus être envoyé"});
      }
 };
 
+exports.deletePost = async (req, res) => {
+    try{
+        const userId = getUserId(req);
+        const verifyAdmin = await models.User.findOne({ where: { id : userId}});
+        const post = await models.Post.findOne({where: {id : req.params.id}});
+        if(post.UserId === userId || verifyAdmin.admin === true){
+            models.Comment.destroy({ 
+                where : { PostId : post.id} });
+            models.Post.destroy({ 
+                where : { id : post.id},
+            });
+            res.status(200).json({ message : "Le post à bien été suprimé."})
+        }else {
+            res.status(400).json({ message : "Vous n'avez pas les autorisation pour suprimer ce post."})
+        }
+    } catch(error) {
+        return res.status(500).json(console.log(error))
+    }
+};
