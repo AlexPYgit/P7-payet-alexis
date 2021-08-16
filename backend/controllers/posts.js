@@ -1,6 +1,7 @@
 const models = require('../models');
 const getUserId = require('../middleware/getUser');
 
+//Retourn tout les posts créé
 exports.getAllPosts = async (req, res,) => {
     try{
         const posts = await models.Post.findAll({
@@ -28,6 +29,7 @@ exports.getAllPosts = async (req, res,) => {
     }
 };
 
+//Retourne un seul post pour affiche le post avec tout les commentaires 
 exports.getOnePost = async (req, res ) => {
     try{
         const post = await models.Post.findOne({
@@ -56,6 +58,8 @@ exports.getOnePost = async (req, res ) => {
     }
 };
 
+
+//Permet le création de post
 exports.createPost = async (req, res) => {
    const userId = getUserId(req);
     try{
@@ -74,6 +78,8 @@ exports.createPost = async (req, res) => {
      }
 };
 
+
+//Supression de post par le créateur ou par l'admin
 exports.deletePost = async (req, res) => {
     try{
         const userId = getUserId(req);

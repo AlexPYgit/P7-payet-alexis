@@ -1,10 +1,9 @@
 
+//Vérifi si les champ retourné son vide 
 exports.checkNotNull = (req, res, next) => {
     const name = req.body.name;
     const password = req.body.password;
     const email = req.body.email;
-
-
     if(email == null || name == null || password == null ) {
         return res.status(400).json({ error : 'missing parameters'});
     }else {
@@ -12,6 +11,7 @@ exports.checkNotNull = (req, res, next) => {
     }
 };
 
+//Vérifi la vilidité de l'email
 exports.checkEmail = (req, res, next) => {
     const email = req.body.email;
     const  validateEmail = (email) =>{
@@ -25,10 +25,9 @@ exports.checkEmail = (req, res, next) => {
             return true;
         }
     }
-
     if(validateEmail(email)){
         next()
    } else {
     return res.status(400).json({ error : 'missing parameters verify your email'});
     }
-}
+};

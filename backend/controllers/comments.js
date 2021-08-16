@@ -25,6 +25,8 @@ exports.getAllComment = async (req, res,) => {
     }
 }; 
 
+
+//Création de commentaire sur un sujet
 exports.createComment = async (req, res) => {
     const userId = getUserId(req);
     const postId = req.params.id

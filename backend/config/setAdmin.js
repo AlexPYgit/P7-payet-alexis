@@ -1,6 +1,6 @@
 const models = require("../models");
 const bcrypt = require("bcrypt");
-// Fonction qui crée le compte admin dans la base de données à la connexion s'il n'existe pas
+// Création du compte administrateur à la connexion s'il n'existe pas
 function setAdmin(req, res) {
   models.User.findOne({ where: { email: "admin@mail.com" } || { name: "admin" } })
     .then((user) => {

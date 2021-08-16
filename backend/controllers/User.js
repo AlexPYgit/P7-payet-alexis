@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 
 const models = require('../models');
 
-
+//Création du compte avec envoie du token
 exports.signup = async (req, res) => {
     try {
       console.log('hello');
@@ -41,10 +41,11 @@ exports.signup = async (req, res) => {
     }
   };
 
-
+  //Connexion à son compte avec envoie du token 
   exports.login = async (req, res) => {
     try {
       const user = await models.User.findOne({
+        attributes : [ 'admin'],
         where: { email: req.body.email },
       }); // on vérifie que l'adresse mail figure bien dan la bdd
       if (user === null) {
@@ -57,6 +58,7 @@ exports.signup = async (req, res) => {
           console.log(user.id)
           res.status(200).send({
             user: user,
+            admin: user.admin,
             token: jwt.sign(
               { userId : user.id},
               SECRET_TOKEN,
@@ -67,11 +69,11 @@ exports.signup = async (req, res) => {
         }
       }
     } catch (error) {
-      return res.status(500).send(console.log(error));
+      return res.status(500).send(  { error: "Erreur serveur" });
     }
   };
-  // { error: "Erreur serveur" }
 
+  //supression de compte de l'utillisateur
   exports.deleteAccount = async (req, res) => {
     try{
       const id = req.params.id;
@@ -84,10 +86,10 @@ exports.signup = async (req, res) => {
       }
     } catch(error) {
         return res.status(500).send({error :"Le compte n'a pas pus être trouvé ! "})
-      }
-      
+      } 
   };
 
+  //Permet de mettre à jours les informations de sont compte
   exports.updateAccount = async (req, res ) => {
     const id = req.params.id;
     console.log(id)
@@ -118,6 +120,8 @@ exports.signup = async (req, res) => {
     }
   };
 
+
+  //Retourne tout les comptes des utilisateurs pour l'administrateur
   exports.getAllUser = async (req, res) => {
     try{
       const users = await models.User.findAll({

@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const helmet  =require('helmet');
-// const bodyParser = require('body-parser');
 require('dotenv').config();
 
 //routes
@@ -17,7 +16,7 @@ const { sequelize } = require('./models/index');
 
 const app = express();
 
-//  app.use(bodyParser.json());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended:true}));
 app.use(cors()); //partage entre serveurs
@@ -31,7 +30,7 @@ app.use('/api/message', messageRoutes);
 app.use('/api/hello', helloRoutes);
 
 
-
+//Retourne l'état de la connexionéé
 const databaseTest = async function(){
     try{
        await sequelize.authenticate();
