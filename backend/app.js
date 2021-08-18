@@ -9,7 +9,6 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
 const messageRoutes = require('./routes/messages');
-const helloRoutes = require('./routes/helloModel');
 
 //database
 const { sequelize } = require('./models/index');
@@ -27,7 +26,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/message', messageRoutes);
-app.use('/api/hello', helloRoutes);
 
 
 //Retourne l'état de la connexionéé

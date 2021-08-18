@@ -1,11 +1,20 @@
 
 //Vérifi si les champ retourné son vide 
-exports.checkNotNull = (req, res, next) => {
-    const name = req.body.name;
-    const password = req.body.password;
-    const email = req.body.email;
-    if(email == null || name == null || password == null ) {
+exports.checkNotNullLogin = (req, res, next) => {
+    const { password, email}  = req.body;
+  
+    if(email == null || password == null ) {
         return res.status(400).json({ error : 'missing parameters'});
+    }else {
+        next()
+    }
+};
+
+exports.checkNotNullSignup = (req, res, next) => {
+    const { name, password, email}  = req.body;
+  
+    if(name == null || email == null || password == null )
+     { return res.status(400).json({ error : 'missing parameters'});
     }else {
         next()
     }

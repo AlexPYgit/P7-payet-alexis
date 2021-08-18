@@ -45,7 +45,7 @@ exports.signup = async (req, res) => {
   exports.login = async (req, res) => {
     try {
       const user = await models.User.findOne({
-        attributes : [ 'admin'],
+        // attributes : [ 'admin'], Trouver comment récuper le boolean admin
         where: { email: req.body.email },
       }); // on vérifie que l'adresse mail figure bien dan la bdd
       if (user === null) {
@@ -69,9 +69,10 @@ exports.signup = async (req, res) => {
         }
       }
     } catch (error) {
-      return res.status(500).send(  { error: "Erreur serveur" });
+      return res.status(500).send(console.log(error)  );
     }
   };
+  // { error: "Erreur serveur" }
 
   //supression de compte de l'utillisateur
   exports.deleteAccount = async (req, res) => {
