@@ -3,28 +3,45 @@ const bcrypt = require('bcrypt');
 require('dotenv').config({path: '.env'});
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
 const { Op } = require("sequelize");
+const cookie = require ('cookie');
 
 const models = require('../models');
+
+
+const nowInTimestamp = () => Math.round(new Date().getTime() / 1000);
+const now = nowInTimestamp();
+const generateJWT = (now, userID) => {
+  return jwt.sign(
+    {
+      exp: now + 60*60*4, // 4h
+			userID,
+		},
+		SECRET_TOKEN
+    );
+  };
 
 //Création du compte avec envoie du token
 exports.signup = async (req, res) => {
     try {
-      console.log('hello');
-      console.log(await req.body.email);
+      const userCreate = await req.body;
       const user = await models.User.findOne({
         where: { email: req.body.email },
       });
+    
       if (user !== null) {
-        if (user.name === req.body.name) {
-          return res.status(400).json({ error: "ce pseudo est déjà utilisé" });
+        if (user.name === userCreate.name) {
+          return res.status(400).json({ error: "ce nom est déjà utilisé" });
         }
-      } else {
-        const hash = await bcrypt.hash(req.body.password, 10);
+      } else{
+        const hash = await bcrypt.hash(userCreate.password, 10);
         const newUser = await models.User.create({
           name: req.body.name,
           email: req.body.email,
           password: hash,
            admin: false,
+        });
+        const user = await models.User.findOne({
+          where: { email: req.body.email },
         });
         res.status(201).send({
           user: newUser,
@@ -37,15 +54,15 @@ exports.signup = async (req, res) => {
         });
       }
     } catch (error) {
-      return res.status(400).send({ error: "email déjà utilisé" });
+      return res.status(400).send(console.log(error));
     }
+    // { error: "erreur de création de compte" }
   };
 
   //Connexion à son compte avec envoie du token 
   exports.login = async (req, res) => {
     try {
       const user = await models.User.findOne({
-        // attributes : [ 'admin'], Trouver comment récuper le boolean admin
         where: { email: req.body.email },
       }); // on vérifie que l'adresse mail figure bien dan la bdd
       if (user === null) {
@@ -56,14 +73,11 @@ exports.signup = async (req, res) => {
           return res.status(401).send({ error: "Mot de passe incorrect !" });
         } else {
           console.log(user.id)
+          const jwt = generateJWT(now, user.id);
           res.status(200).send({
             user: user,
+            token: `${jwt}`,
             admin: user.admin,
-            token: jwt.sign(
-              { userId : user.id},
-              SECRET_TOKEN,
-              { expiresIn : '12h'}
-            ),
             message: "Bonjour " + user.name + " !",
           });
         }

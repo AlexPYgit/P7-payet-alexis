@@ -25,7 +25,6 @@ exports.checkEmail = (req, res, next) => {
     const email = req.body.email;
     const  validateEmail = (email) =>{
         let emailReg = /([a-zA-Z0-9_.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([a-zA-Z0-9-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)/;
-        // (/^([w-.]+)@((?:[w]+.)+)([a-zA-Z]{2,4})/i);
         let valid = emailReg.test(email);
     
         if(!valid) {

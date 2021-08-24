@@ -1,10 +1,30 @@
 <template>
+<w-app>
   <div id="nav">
     <router-link to="/">testLogin</router-link> |
-    <router-link to="/signup">Inscription</router-link>
+    <w-button @click="logOut()" class="button m3" > déconnexion  </w-button> | 
+    <router-link  to="home" class="button m3" > Reour sur mon compte  </router-link>
   </div>
   <router-view/>
+  </w-app>
 </template>
+
+
+<script>
+export default {
+  methods:{
+    logOut: function (){
+        const self = this;
+        this.$store.dispatch('logOut').then( () => {
+          console.log({message :'déconnecté'})
+          self.$router.push('/')
+        }).catch (error => {
+          console.log(error)
+        });
+      },
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
