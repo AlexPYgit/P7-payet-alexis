@@ -81,6 +81,7 @@ exports.createPost = async (req, res) => {
 
 //Supression de post par le créateur ou par l'admin
 exports.deletePost = async (req, res) => {
+    console.log(req.body)
     try{
         const userId = getUserId(req);
         const verifyAdmin = await models.User.findOne({ where: { id : userId}});

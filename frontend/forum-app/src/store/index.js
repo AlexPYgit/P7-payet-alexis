@@ -140,6 +140,11 @@ export default createStore({
       }).catch( (error) => { console.log(error)});
     },
 
+    deleteAccount: ( {commit}, userId)=> {
+      instance.delete(`/users/accounts/${userId}`)
+      commit;
+    },
+
     // END SECTION USER //
 
 
@@ -165,6 +170,14 @@ export default createStore({
     readSubject:( {commit}, Subject)=> {
         commit('ONE_SUBJECT',Subject)
        console.log(Subject);
+    },
+
+    deleteSubject: ( {commit}, infoDeleteSubject) => {
+      commit;
+      console.log(infoDeleteSubject)
+      const subjecId = infoDeleteSubject.subjecId
+      const userId = infoDeleteSubject.userId
+      instance.delete(`/post/${subjecId}`,{userId:`${userId}`})
     },
 
     sendComment:({commit},infoCreateComment)=>{

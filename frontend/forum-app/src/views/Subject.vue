@@ -1,17 +1,21 @@
 <template >
-<w-button v-if="user.user.id === storageSubject.userId"> suprimer le sujet</w-button>
+<w-flex>
+    <w-button class="button_delete_subject ml4" v-if="user.user.id == storageSubject.User.id  "  @click="deleteSubject()"  > suprimer le sujet</w-button>
+    <!-- <w-button class="button_delete_subject" v-else=" "  > "" </w-button> -->
+</w-flex>
 <w-flex justify-center>
 <w-card class=" xs10">
     <div >
         <h1>Page du sujets</h1>
         <p class="storageSubject"> {{storageSubject}} </p>
-        <p class="storageSubject"> {{storageSubject.id}} </p>
+        <p class="storageSubject"> {{storageSubject.User.id}} </p>
         <br>
         <p class="storageSubject"> {{storageSubject.createdAt}} </p>
         <p class="storageSubject "> {{storageSubject.title}} </p>
         <p class="storageSubject"> {{storageSubject.post}} </p>
     </div>
     <br>
+    <p> user id {{user.user.id}} </p>
     <p> <strong> Commentaire </strong></p>
     <div v-for="comment in storageSubject.Comments" :key="comment">
         <p> {{comment.content}} </p>
@@ -31,7 +35,6 @@
       </w-flex>
       <w-textarea v-model="content" type="text" for="contentSubject"  class = "mt4"  contour  shadow > contenu du commentaire </w-textarea>
       <br>       
-       <p class="storageSubject"> {{storageSubject.id}} </p>
 
       <w-button @click="sendComment(storageSubject.id)"  class="button" > envoyer   </w-button>
     </w-card>
@@ -84,6 +87,13 @@ import { mapState } from 'vuex';
                 {content:this.content,
                 idSubject: idSubject
                 });
+            },
+            deleteSubject(){
+                this.$store.dispatch('deleteSubject', {
+                   subjecId: this.storageSubject.id, 
+                   userId: this.storageSubject.User.id
+                })
+                this.$router.push('/home')
             },
         },
     }

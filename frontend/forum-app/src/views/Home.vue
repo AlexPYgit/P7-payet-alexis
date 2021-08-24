@@ -40,7 +40,10 @@
       <w-button @click="createSubject(),getAllSubject()" class="button" > envoyer   </w-button>
     </w-card>
   </w-flex>
-  
+<w-flex justify-start>
+   <w-button @click="deleteAccount(user.user.id)"  class="button ma5" > suprimer son compte   </w-button>
+</w-flex>
+
 </template>
 
 
@@ -83,6 +86,7 @@ export default {
     getUsers (){
       this.$store.dispatch('getUsers')
     },
+
     logOut: function (){
         const self = this;
         this.$store.dispatch('logOut').then( () => {
@@ -91,6 +95,14 @@ export default {
         }).catch (error => {
           console.log(error)
         });
+      },
+
+      deleteAccount (userId){
+        const self = this;
+        this.$store.dispatch('deleteAccount', userId)
+        .then( ()=> self.$router.push('/'))
+        .catch (error=> {console.log(error)});
+
       },
   },
 
