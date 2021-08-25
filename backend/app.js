@@ -26,7 +26,6 @@ app.use('/api', testApi);
 app.use('/api/users', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
-app.use('/api/message', messageRoutes);
 
 
 //Retourne l'état de la connexionéé

@@ -3,8 +3,30 @@
   <div>
     <img alt="Vue logo" style="height : 200px; "  src="../assets/icon.png">
     <Welcome /> <h1>" {{ this.$store.state.user.user.name }} "</h1>
-    <button v-if="user.admin == true" @click="getUsers()" class="button" > récupère les users  </button>
+    <w-card v-if="user.admin == true">
+      <w-flex class="column">
+        <w-flex>
+          <w-button  @click="getUsers()" class="button" > récupère les users  </w-button>
+        </w-flex>
+        <w-card  v-for="(user, index ) in users" :key="user">
+          <w-flex>
+           
+            <w-card>
+              <p class="my4"> nom du compte: " <span class="title3"> {{ user.name }}</span> "</p>
+              <br>
+              <span> email du compte: "{{ user.email }}"" </span>
+            </w-card>
+              <w-flex justify-start>
+                <w-button @click="deleteAccount(user.id, remove(index))"  class="button ma5" > suprimer son compte   </w-button>
+              </w-flex>
+          </w-flex>
+        </w-card>
+      </w-flex>
     <br>
+      <div>
+        
+      </div>
+    </w-card>
     <br>
     <w-button @click="logOut()" class="button ma3" > déconnexion  </w-button>
   </div>
@@ -100,15 +122,23 @@ export default {
       deleteAccount (userId){
         const self = this;
         this.$store.dispatch('deleteAccount', userId)
-        .then( ()=> self.$router.push('/'))
+        .then( ()=> {
+           this.storageUser = JSON.parse(localStorage.getItem('user'))
+          if(this.storageUser.user.admin !== true){
+            self.$router.push('/')}
+            this.users.sort()
+          })
         .catch (error=> {console.log(error)});
-
       },
+      remove(index){
+        this.users.splice(index, 1)
+      }
   },
 
   computed: {
     ...mapState({
      user: 'user',
+     users:'users',
      subjectLists : 'subjectLists',
      State:'state',
     }),

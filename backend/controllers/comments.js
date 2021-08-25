@@ -50,4 +50,23 @@ exports.createComment = async (req, res) => {
      }catch(error) {
          return res.status(500).send(console.log(error));
      }
-}
+};
+
+// Suprimer son commentaire
+exports.deleteComment= async (req, res)=> {
+    const userId = getUserId(req);
+    const commentId = req.params.id;
+    try {
+        const verifyAdmin = await models.User.findOne({ where: { id : userId}});
+        const comment = await models.Comment.findOne({where: {id : commentId}});
+        if(comment.userId === userId || verifyAdmin.admin === true){
+            models.Comment.destroy({ 
+                where : { id : comment.id} });
+            res.status(200).json({ message : "Le commentaire à bien été suprimé."})
+        }else {
+            res.status(400).json({ message : "Vous n'avez pas les autorisation pour suprimer ce post."})
+        }
+    } catch (error) {
+        res.status(500).json({ message : "Un problème est survenue au moment de la supréssion du commentaire."})
+    }
+};

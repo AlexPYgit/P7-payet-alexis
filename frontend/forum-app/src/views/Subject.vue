@@ -1,6 +1,6 @@
 <template >
 <w-flex>
-    <w-button class="button_delete_subject ml4" v-if="user.user.id == storageSubject.User.id  "  @click="deleteSubject()"  > suprimer le sujet</w-button>
+    <w-button class="button_delete_subject ma4" v-if="user.user.id == storageSubject.User.id  "  @click="deleteSubject()"  > suprimer le sujet</w-button>
 </w-flex>
 <w-flex justify-center>
     <w-card class=" xs10" tile>
@@ -24,11 +24,14 @@
             <p> <strong> Commentaire </strong></p>
         </w-card>
         <w-card class="xs10  blue-light7--bg">
-        <div v-for="comment in storageSubject.Comments" :key="comment">
+        <div v-for="(comment, index) in storageSubject.Comments" :key="comment" >
         <w-flex class="justify-space-between">
             <w-card class="xs12 my2 blue-light7--bg" >
             <p class="caption "> {{comment.User.name}} </p>
             <p> {{comment.content}} </p> 
+            <w-flex class="justify-end" >
+                <w-button @click="deleteComent(comment.id, remove(index))" v-if="user.user.id == storageSubject.User.id  " class="caption"> suprimer son commentaire</w-button>
+            </w-flex>
             </w-card>
         </w-flex>
         </div>
@@ -48,7 +51,7 @@
       <w-textarea v-model="content" type="text" for="contentSubject"  class = "mt4"  contour  shadow > contenu du commentaire </w-textarea>
       <br>       
 
-      <w-button @click="sendComment(storageSubject.id) , $waveui.notify('Success!', 'success')"  class="button" > envoyer   </w-button>
+      <w-button @click="sendComment(storageSubject.id), $waveui.notify('Commentaire envoyé !', 'success'),refreshInput()"  class="button" > envoyer   </w-button>
     </w-card>
   </w-flex>
 
@@ -73,31 +76,34 @@ import moment from 'moment'
         },
 
         created(){
-
-                this.storageSubject = this.oneSubject
-                
-            // if(this.$store.state.oneSubject == ''){
-            //        this.storageSubject = JSON.parse(localStorage.getItem('storageSubject'));
-            //        console.log('ici si',this.storageSubject)
-            //        return
-            //    }else{
-            //        this.storageSubject = this.$store.state.oneSubject
-            //        return
-            //    }
-               
-            //     if(localStorage.getItem('storageSubject'))
-            //   try {
-            //       this.storageSubject = JSON.parse(localStorage.getItem('storageSubject'));
-            //       console.log(this.storageSubject = JSON.parse(localStorage.getItem('storageSubject')));
-            //       return
-            //     } catch (error) {
-            //         console.log(error)
-            //   }
-        
+                if(this.oneSubject == null){
+                    this.storageSubject = this.oneSubject
+                    }else{
+                        this.storageSubject = JSON.parse(localStorage.getItem('storageSubject'))
+                    }        
         },
 
         
         methods:{
+            
+            // refreshPage(){
+            //     this.$router.go()
+            // },
+
+            refreshInput(){
+                this.content= ' '
+            },
+
+            deleteComent(commentId){
+                this.$store.dispatch('deleteComment',commentId)
+                this.storageSubject.Comments.sort() 
+            },
+
+            remove(index){
+                console.log(this.storageSubject)
+                console.log(index)
+                 this.storageSubject.Comments.splice(index, 1)
+            },
             
             sendComment(idSubject){
                   console.log(idSubject)

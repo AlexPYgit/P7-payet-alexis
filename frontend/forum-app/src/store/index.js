@@ -34,14 +34,6 @@ export default createStore({
   },
   getters:{
 
-    // subjectLists(state){
-    //   return state.subjectLists;
-    // },
-
-    // oneSubject(state){
-    //   return state.oneSubject;
-    // },
-
     userInfos(state){
       return state.userInfos;
     },
@@ -168,8 +160,9 @@ export default createStore({
     },
 
     readSubject:( {commit}, Subject)=> {
-        commit('ONE_SUBJECT',Subject)
-       console.log(Subject);
+      localStorage.setItem('storageSubject', JSON.stringify(Subject))
+      commit('ONE_SUBJECT',Subject)
+      console.log(Subject);
     },
 
     deleteSubject: ( {commit}, infoDeleteSubject) => {
@@ -187,6 +180,10 @@ export default createStore({
       const content = infoCreateComment.content;
       instance.post(`/comment/comment/${idSubject}`,{content:`${content}`});
     },
+    deleteComment: ( {commit}, commentId)=> {
+      commit;
+      instance.delete(`/comment/${commentId}`)
+    }
   
   },
   modules: {
