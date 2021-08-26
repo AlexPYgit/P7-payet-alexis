@@ -1,7 +1,6 @@
 <template>
 <w-app>
   <div id="nav">
-    <router-link to="/">testLogin</router-link> |
     <w-button @click="logOut()" class="button m3" > déconnexion  </w-button> | 
     <router-link  to="home" class="button m3" > Reour sur mon compte  </router-link>
   </div>

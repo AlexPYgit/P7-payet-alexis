@@ -89,6 +89,7 @@ export default {
   methods:{
     readSubject(Subject){
       this.$store.dispatch('readSubject',Subject)
+      this.$store.dispatch('getAllComentBySubject', Subject.id)
       this.$router.push('/subject')
     },
 
@@ -96,7 +97,9 @@ export default {
       this.$store.dispatch('createSubject', {
         title : this.title,
         post : this.post,
-      })
+      });
+      this.title = '',
+      this.post= '';
     },
 
     getAllSubject (){

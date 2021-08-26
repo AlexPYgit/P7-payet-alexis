@@ -13,13 +13,6 @@ if(!user){
   instance.defaults.headers.common['Authorization'] = user.token;
 }
 
-// let oneSubject = localStorage.getItem('storageSubject');
-// if(oneSubject === null){
-//   oneSubject= {};
-// }else{
-//   oneSubject= JSON.parse(oneSubject);
-// }
-
 
 export default createStore({
   state: {
@@ -30,6 +23,7 @@ export default createStore({
     subjectLists : [],
     oneSubject: {},
     contentSubject: {},
+    comentBySubject:[],
    
   },
   getters:{
@@ -86,8 +80,14 @@ export default createStore({
 
      ONE_SUBJECT(state, oneSubject){
       //  localStorage.setItem('storageSubject', JSON.stringify(oneSubject))
-       state.oneSubject = oneSubject
-     }
+       state.oneSubject = oneSubject;
+     },
+
+    //  SECTION COMENT
+
+    COMENT_BY_SUBJECT(state, comentBySubject){
+      state.comentBySubject = comentBySubject;
+    },
 
   },
   actions: {
@@ -173,6 +173,15 @@ export default createStore({
       instance.delete(`/post/${subjecId}`,{userId:`${userId}`})
     },
 
+    // SECTION COMENT
+
+    getAllComentBySubject:( {commit},subjectId)=>{
+      instance.get(`/comment/allComment/post/${subjectId}`)
+      .then((response) => {
+        commit('COMENT_BY_SUBJECT', response.data)
+      }).catch(error => console.log(error));
+    },
+
     sendComment:({commit},infoCreateComment)=>{
       commit;
       console.log(infoCreateComment)
@@ -180,7 +189,8 @@ export default createStore({
       const content = infoCreateComment.content;
       instance.post(`/comment/comment/${idSubject}`,{content:`${content}`});
     },
-    deleteComment: ( {commit}, commentId)=> {
+
+    deleteComment: ( {commit}, commentId) => {
       commit;
       instance.delete(`/comment/${commentId}`)
     }

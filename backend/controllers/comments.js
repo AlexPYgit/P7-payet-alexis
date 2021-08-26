@@ -3,10 +3,12 @@ const getUserId = require('../middleware/getUser');
 
 //utilisé pour le developement de l'app
 exports.getAllComment = async (req, res,) => {
-    //faire en sorte de récupérer tout les commentaire d'un seul post
+    //  récupére tout les commentaires d'un seul post
     try{
+        const idPostComent = req.params.id;
         const comment = await models.Comment.findAll({
-            attributes: ['id', 'content', 'createdAt'],
+            where : {PostId : idPostComent},
+                attributes: ['id', 'content', 'createdAt'],
             order: [["createdAt",'DESC']],
             include: [
                 {
@@ -19,6 +21,7 @@ exports.getAllComment = async (req, res,) => {
                 },
             ],
         });
+         console.log(comment)
         res.status(200).send(comment);
     } catch (error) {
         return res.status(500).send( { error : "Une erreur c'est produite à la récupération des commentaires ! "});

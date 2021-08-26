@@ -24,13 +24,13 @@
             <p> <strong> Commentaire </strong></p>
         </w-card>
         <w-card class="xs10  blue-light7--bg">
-        <div v-for="(comment, index) in storageSubject.Comments" :key="comment" >
+        <div v-for="comment in comentBySubject" :key="comment" >
         <w-flex class="justify-space-between">
             <w-card class="xs12 my2 blue-light7--bg" >
             <p class="caption "> {{comment.User.name}} </p>
             <p> {{comment.content}} </p> 
             <w-flex class="justify-end" >
-                <w-button @click="deleteComent(comment.id, remove(index))" v-if="user.user.id == storageSubject.User.id  " class="caption"> suprimer son commentaire</w-button>
+                <w-button @click="deleteComment(comment.id,storageSubject.id),getAllComentBySubject(storageSubject.id)" v-if="user.user.id == storageSubject.User.id  " class="caption"> suprimer son commentaire</w-button>
             </w-flex>
             </w-card>
         </w-flex>
@@ -50,8 +50,7 @@
       </w-flex>
       <w-textarea v-model="content" type="text" for="contentSubject"  class = "mt4"  contour  shadow > contenu du commentaire </w-textarea>
       <br>       
-
-      <w-button @click="sendComment(storageSubject.id), $waveui.notify('Commentaire envoyé !', 'success'),refreshInput()"  class="button" > envoyer   </w-button>
+      <w-button @click="sendComment(storageSubject.id), $waveui.notify('Commentaire envoyé !', 'success')"  class="button" > envoyer   </w-button>
     </w-card>
   </w-flex>
 
@@ -68,15 +67,18 @@ import moment from 'moment'
             ...mapState({
                 user:'user',
                 oneSubject: 'oneSubject',
+                comentBySubject: 'comentBySubject',
             })
         },
         data (){
             return {
-            content: ''}
+            content: '',
+            }
         },
 
         created(){
-                if(this.oneSubject == null){
+
+                if(this.oneSubject === null){
                     this.storageSubject = this.oneSubject
                     }else{
                         this.storageSubject = JSON.parse(localStorage.getItem('storageSubject'))
@@ -86,33 +88,25 @@ import moment from 'moment'
         
         methods:{
             
-            // refreshPage(){
-            //     this.$router.go()
-            // },
-
-            refreshInput(){
-                this.content= ' '
-            },
-
-            deleteComent(commentId){
+            deleteComment(commentId, storageSubjectId ){
+                console.log(storageSubjectId)
                 this.$store.dispatch('deleteComment',commentId)
-                this.storageSubject.Comments.sort() 
+                this.$store.comentBySubject= ''
+                this.$store.dispatch('getAllComentBySubject', storageSubjectId)
             },
 
-            remove(index){
-                console.log(this.storageSubject)
-                console.log(index)
-                 this.storageSubject.Comments.splice(index, 1)
+            getAllComentBySubject(){
             },
             
             sendComment(idSubject){
-                  console.log(idSubject)
-                  console.log(this.content)
                 this.$store.dispatch('sendComment', 
                 {content:this.content,
                 idSubject: idSubject
                 });
+                this.content= ' ';
+                this.$store.dispatch('getAllComentBySubject', idSubject)
             },
+
             deleteSubject(){
                 this.$store.dispatch('deleteSubject', {
                    subjecId: this.storageSubject.id, 
@@ -120,6 +114,7 @@ import moment from 'moment'
                 })
                 this.$router.push('/home')
             },
+
             moment(){
                 let date = this.storageSubject.createdAt
                 return moment(date).format('MMMM Do YYYY, hh:mm');
