@@ -37,6 +37,10 @@ export default createStore({
     user (state){
       return state.user;
     },
+
+    comentBySubject(state){
+      return state.comentBySubject;
+    }
   
 
   },
@@ -73,13 +77,11 @@ export default createStore({
 
     // SECTION MUTATIONS POST //
 
-
      SUBJECT_LISTS(state, subjectLists){
        state.subjectLists = subjectLists;
      },
 
      ONE_SUBJECT(state, oneSubject){
-      //  localStorage.setItem('storageSubject', JSON.stringify(oneSubject))
        state.oneSubject = oneSubject;
      },
 
@@ -99,16 +101,13 @@ export default createStore({
       localStorage.removeItem('user');
     },
 
-    // fonction pour l'adimn (bouton à installer)
+    // fonction pour l'adimn 
     getUsers: ( { commit }) => {
       instance.get('/users/getAllUser')
     .then( (response) => { 
       const users = response.data;
-      console.log(users);
       commit('GET_USERS', users);
-    }).catch( (error) => {
-      console.log(error);
-    })
+    }).catch( (error) => { console.log(error)})
   },
 
     login: ({ commit },userInfos) => {
@@ -118,17 +117,14 @@ export default createStore({
         commit('USER_INFOS', response.data.user);
         const user = response.data;
         commit('USER', user);
-        console.log(user);
-      }).catch((error) => {
-        console.log(error)
-      })
+        console.og(user);
+      }).catch((error) => {console.log(error)})
     },
 
     createAccount : ({commit}, userInfos) => {
       instance.post('/users/signup', userInfos)
       .then( (response) => {
         commit('USER', response.data);
-        console.log(response.data);
       }).catch( (error) => { console.log(error)});
     },
 
@@ -151,23 +147,16 @@ export default createStore({
     },
 
     createSubject: ( {commit},contentSubject ) => {
-      console.log(contentSubject)
       commit;
-      instance.post('/post/post',contentSubject)
-      .then( (response) => {
-        console.log(response);
-      }).catch((error) => { console.log(error)});
-    },
+      instance.post('/post/post',contentSubject)},
 
     readSubject:( {commit}, Subject)=> {
       localStorage.setItem('storageSubject', JSON.stringify(Subject))
       commit('ONE_SUBJECT',Subject)
-      console.log(Subject);
     },
 
     deleteSubject: ( {commit}, infoDeleteSubject) => {
       commit;
-      console.log(infoDeleteSubject)
       const subjecId = infoDeleteSubject.subjecId
       const userId = infoDeleteSubject.userId
       instance.delete(`/post/${subjecId}`,{userId:`${userId}`})
@@ -184,7 +173,6 @@ export default createStore({
 
     sendComment:({commit},infoCreateComment)=>{
       commit;
-      console.log(infoCreateComment)
       const idSubject = infoCreateComment.idSubject;
       const content = infoCreateComment.content;
       instance.post(`/comment/comment/${idSubject}`,{content:`${content}`});
@@ -196,6 +184,4 @@ export default createStore({
     }
   
   },
-  modules: {
-  }
 })

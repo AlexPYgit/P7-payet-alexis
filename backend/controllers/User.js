@@ -3,11 +3,9 @@ const bcrypt = require('bcrypt');
 require('dotenv').config({path: '.env'});
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
 const { Op } = require("sequelize");
-const cookie = require ('cookie');
-
 const models = require('../models');
 
-
+// création du Token
 const nowInTimestamp = () => Math.round(new Date().getTime() / 1000);
 const now = nowInTimestamp();
 const generateJWT = (now, userID) => {
@@ -27,7 +25,6 @@ exports.signup = async (req, res) => {
       const user = await models.User.findOne({
         where: { email: req.body.email },
       });
-    
       if (user !== null) {
         if (user.name === userCreate.name) {
           return res.status(400).json({ error: "ce nom est déjà utilisé" });
@@ -38,25 +35,27 @@ exports.signup = async (req, res) => {
           name: req.body.name,
           email: req.body.email,
           password: hash,
-           admin: false,
+          admin: false,
         });
         const user = await models.User.findOne({
           where: { email: req.body.email },
         });
+        const jwt = generateJWT(now, user.id);
         res.status(201).send({
           user: newUser,
-           token: jwt.sign(
-              { userId : user.id},
-              SECRET_TOKEN,
-              { expiresIn : '12h'}
-            ),
+          token: `${jwt}`
+          // jwt.sign(
+          //   { userId : user.id},
+          //   SECRET_TOKEN,
+          //   { expiresIn : '12h'}
+          // )
+          ,
           message: `Votre compte est bien créé ${newUser.name} !`,
         });
       }
     } catch (error) {
-      return res.status(400).send(console.log(error));
+      return res.status(400).send({ error: "erreur de création de compte" });
     }
-    // { error: "erreur de création de compte" }
   };
 
   //Connexion à son compte avec envoie du token 
@@ -72,7 +71,6 @@ exports.signup = async (req, res) => {
         if (!hash) {
           return res.status(401).send({ error: "Mot de passe incorrect !" });
         } else {
-          console.log(user.id)
           const jwt = generateJWT(now, user.id);
           res.status(200).send({
             user: user,
@@ -83,10 +81,9 @@ exports.signup = async (req, res) => {
         }
       }
     } catch (error) {
-      return res.status(500).send(console.log(error)  );
+      return res.status(500).send({ error: "Erreur serveur" });
     }
   };
-  // { error: "Erreur serveur" }
 
   //supression de compte de l'utillisateur
   exports.deleteAccount = async (req, res) => {
@@ -103,38 +100,6 @@ exports.signup = async (req, res) => {
         return res.status(500).send({error :"Le compte n'a pas pus être trouvé ! "})
       } 
   };
-
-  //Permet de mettre à jours les informations de sont compte
-  exports.updateAccount = async (req, res ) => {
-    const id = req.params.id;
-    console.log(id)
-    try{
-      // const userId = token.getUserId(req);
-      let user = await models.User.findOne({ where : {id : id}});
-      console.log(user.id)
-      if( id == user.id) {
-        if (req.body.name) {
-          user.name = req.body.name;
-        }
-        if (req.body.email) {
-          user.email = req.body.email;
-        }
-        if (req.body.password) {
-          user.password = req.body.password;
-        }
-        const newUser = await user.save({ fields: ["name", "email", "password"] }); 
-        res.status(200).json({
-          user: newUser,
-          messageRetour: "Votre profil a bien été modifié",
-        });
-      }else{
-        return res.status(409).json({message :" Profil non modifié"})
-      }
-    }catch (error) {
-      return res.status(500).json({ message : " Erreur serveur"})
-    }
-  };
-
 
   //Retourne tout les comptes des utilisateurs pour l'administrateur
   exports.getAllUser = async (req, res) => {

@@ -9,13 +9,11 @@ export default {
     props:{
         name: { 
             type: String,
-           
                 }
     },
     mounted() {
         this.$store.dispatch('getAllSubject')
         return;
     },
-
 }
 </script>

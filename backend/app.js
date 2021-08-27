@@ -4,25 +4,19 @@ const helmet  =require('helmet');
 require('dotenv').config();
 
 //routes
-const testApi = require('./routes/testApi');
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/posts');
 const commentRoutes = require('./routes/comments');
-const messageRoutes = require('./routes/messages');
 
-//database
+// ORM database
 const { sequelize } = require('./models/index');
 
 const app = express();
-
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended:true}));
 app.use(cors()); //partage entre serveurs
 app.use(helmet());
 
-app.use('/api', testApi);
 app.use('/api/users', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);

@@ -1,6 +1,6 @@
 <template >
 <w-flex>
-    <w-button class="button_delete_subject ma4" v-if="user.user.id == storageSubject.User.id  "  @click="deleteSubject()"  > suprimer le sujet</w-button>
+    <w-button class="button_delete_subject ma4" v-if="user.user.id == this.storageSubject.User.id"  @click="deleteSubject()"  > Supprimer le sujet</w-button>
 </w-flex>
 <w-flex justify-center>
     <w-card class=" xs10" tile>
@@ -17,24 +17,24 @@
 </w-flex>
 
     <!-- commentaire> -->
-<w-flex justify-center>
+<w-flex class="justify-center">
     <w-card  class=" xs10 ">
         <br>
         <w-card class=" xs10 blue-light3--bg" >
             <p> <strong> Commentaire </strong></p>
         </w-card>
         <w-card class="xs10  blue-light7--bg">
-        <div v-for="comment in comentBySubject" :key="comment" >
-        <w-flex class="justify-space-between">
-            <w-card class="xs12 my2 blue-light7--bg" >
-            <p class="caption "> {{comment.User.name}} </p>
-            <p> {{comment.content}} </p> 
-            <w-flex class="justify-end" >
-                <w-button @click="deleteComment(comment.id,storageSubject.id),getAllComentBySubject(storageSubject.id)" v-if="user.user.id == storageSubject.User.id  " class="caption"> suprimer son commentaire</w-button>
-            </w-flex>
-            </w-card>
-        </w-flex>
-        </div>
+            <div v-for="(comment, index) in comentBySubject" :key="comment" >
+                <w-flex class="justify-space-between">
+                    <w-card class="xs12 my2 blue-light7--bg" >
+                        <p class="caption "> {{comment.User.name}} </p>
+                        <p class="my5" > {{comment.content}} </p> 
+                        <w-flex class="justify-end">
+                            <w-button @click="deleteComment(comment.id,storageSubject.id),getAllComentBySubject(storageSubject.id)" v-if="user.user.id == comentBySubject[index].User.id" class="my5 "> Supprimer mon commentaire</w-button>
+                        </w-flex>
+                    </w-card>
+                </w-flex>
+            </div>
         </w-card>
     </w-card>
 </w-flex>
@@ -44,13 +44,13 @@
   <w-flex justify-center class="ma4">
     <w-card class="xs10">
       <w-flex justify-center>
-        <w-card class="xs4">
-          <label> commenter le sujet </label>
+        <w-card >
+          <label>Commenter le sujet</label>
         </w-card>
       </w-flex>
       <w-textarea v-model="content" type="text" for="contentSubject"  class = "mt4"  contour  shadow > contenu du commentaire </w-textarea>
       <br>       
-      <w-button @click="sendComment(storageSubject.id), $waveui.notify('Commentaire envoyé !', 'success')"  class="button" > envoyer   </w-button>
+      <w-button @click="sendComment(this.storageSubject.id), $waveui.notify('Commentaire envoyé !', 'success')"  class="button" > envoyer   </w-button>
     </w-card>
   </w-flex>
 
@@ -77,14 +77,14 @@ import moment from 'moment'
         },
 
         created(){
-
-                if(this.oneSubject === null){
-                    this.storageSubject = this.oneSubject
+            if(this.oneSubject === null){
+                this.storageSubject = this.oneSubject
                     }else{
                         this.storageSubject = JSON.parse(localStorage.getItem('storageSubject'))
-                    }        
+                    }
+                    this.$store.dispatch('getAllComentBySubject', this.storageSubject.id)
+                    console.log(this.storageSubject)
         },
-
         
         methods:{
             
@@ -93,9 +93,6 @@ import moment from 'moment'
                 this.$store.dispatch('deleteComment',commentId)
                 this.$store.comentBySubject= ''
                 this.$store.dispatch('getAllComentBySubject', storageSubjectId)
-            },
-
-            getAllComentBySubject(){
             },
             
             sendComment(idSubject){

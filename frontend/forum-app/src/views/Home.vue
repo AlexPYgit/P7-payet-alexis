@@ -10,7 +10,6 @@
         </w-flex>
         <w-card  v-for="(user, index ) in users" :key="user">
           <w-flex>
-           
             <w-card>
               <p class="my4"> nom du compte: " <span class="title3"> {{ user.name }}</span> "</p>
               <br>
@@ -22,13 +21,11 @@
           </w-flex>
         </w-card>
       </w-flex>
-    <br>
-      <div>
-        
+      <br>
+      <div>   
       </div>
     </w-card>
     <br>
-    <w-button @click="logOut()" class="button ma3" > déconnexion  </w-button>
   </div>
 
     <!-- Affichage des sujuets -->
@@ -36,9 +33,9 @@
     <w-card class="xs10">
       <h1>Sujet en cours</h1>
       <div v-for="subjectList in subjectLists" :key="subjectList">
-      <w-transition-fade>
-        <w-button class="ma4 pa4" bg-color="secondary" outline md text lg  round  @click="readSubject(subjectList)"> {{ subjectList.title }}  </w-button>
-      </w-transition-fade>
+        <w-transition-fade>
+          <w-button class="ma4 pa4" bg-color="secondary" outline md text lg  round  @click="readSubject(subjectList)"> {{ subjectList.title }}  </w-button>
+        </w-transition-fade>
       </div>
     </w-card>
   </w-flex>
@@ -63,11 +60,11 @@
     </w-card>
   </w-flex>
 <w-flex justify-start>
-   <w-button @click="deleteAccount(user.user.id)"  class="button ma5" > suprimer son compte   </w-button>
+  <w-button @click="logOut()" class="button ma3" > déconnexion  </w-button>
+  <w-button @click="deleteAccount(user.user.id)"  class="button ma5" > suprimer son compte   </w-button>
 </w-flex>
 
 </template>
-
 
 <script>
 // @ is an alias to /src
@@ -89,7 +86,7 @@ export default {
   methods:{
     readSubject(Subject){
       this.$store.dispatch('readSubject',Subject)
-      this.$store.dispatch('getAllComentBySubject', Subject.id)
+      this.$store.dispatch('getAllComentBySubject', Subject)
       this.$router.push('/subject')
     },
 
@@ -104,17 +101,16 @@ export default {
 
     getAllSubject (){
     this.$store.dispatch('getAllSubject')
-     .then( response => { console.log(response)} );
-     return
     },
 
     getUsers (){
       this.$store.dispatch('getUsers')
     },
 
-    logOut: function (){
+    logOut (){
         const self = this;
-        this.$store.dispatch('logOut').then( () => {
+        this.$store.dispatch('logOut')
+        .then( () => {
           console.log({message :'déconnecté'})
           self.$router.push('/')
         }).catch (error => {

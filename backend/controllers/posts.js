@@ -1,7 +1,7 @@
 const models = require('../models');
 const getUserId = require('../middleware/getUser');
 
-//Retourn tout les posts créé
+//Retourn tout les posts créés
 exports.getAllPosts = async (req, res,) => {
     try{
         const posts = await models.Post.findAll({
@@ -29,7 +29,7 @@ exports.getAllPosts = async (req, res,) => {
     }
 };
 
-//Retourne un seul post pour affiche le post avec tout les commentaires 
+//Retourne un seul post avec tous les commentaires 
 exports.getOnePost = async (req, res ) => {
     try{
         const post = await models.Post.findOne({
@@ -70,7 +70,7 @@ exports.createPost = async (req, res) => {
             }],
             title: req.body.title,
             post : req.body.post,
-             UserId: userId,
+            UserId: userId,
         });
         res.status(201).json({ post: 'Votre message est bien envoyé'});
      }catch(error) {
