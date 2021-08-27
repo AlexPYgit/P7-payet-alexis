@@ -1,8 +1,11 @@
 const models = require("../models");
 const bcrypt = require("bcrypt");
+require('dotenv').config({path: '.env'});
+const EMAIL_ADMIN = process.env.EMAIL_ADMIN;
+const NAME_ADMIN = process.env.NAME_ADMIN;
 // Création du compte administrateur à la connexion s'il n'existe pas
 function setAdmin(req, res) {
-  models.User.findOne({ where: { email: "admin@mail.com" } || { name: "admin" } })
+  models.User.findOne({ where: { email: EMAIL_ADMIN } || { name: NAME_ADMIN } })
     .then((user) => {
       if (!user) {
         bcrypt
