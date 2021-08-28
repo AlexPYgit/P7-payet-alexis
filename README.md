@@ -11,7 +11,7 @@ réalisation d'un MVP d'une messagerie d'entreprise
  "CREATE DATABASE groupomania;"
  migrer la bases de donnée fourni dans le dossier database du projet dans votre 
   base de données mysql précédemment créé avec la commande 
- "mysql -u [nom_d'utilisateur] -p[mot_de_passe] groupomania < [chemin du fichier data_base_groupomania]\data_base_groupomania.sql;"
+ "mysql -u [nom_d'utilisateur] -p groupomania < [chemin du fichier data_base_groupomania]\data_base_groupomania.sql"
 
  # * gestion backend  *
 3)
