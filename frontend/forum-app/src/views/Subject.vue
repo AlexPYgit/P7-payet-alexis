@@ -1,6 +1,6 @@
 <template >
 <w-flex>
-    <w-button class="button_delete_subject ma4" v-if="user.user.id == this.storageSubject.User.id"  @click="deleteSubject()"  > Supprimer le sujet</w-button>
+    <w-button class="button_delete_subject ma4" v-if="user.user.id == this.storageSubject.User.id || user.user.admin === true "  @click="deleteSubject()"  > Supprimer le sujet</w-button>
 </w-flex>
 <w-flex justify-center>
     <w-card class=" xs10" tile>
@@ -30,7 +30,7 @@
                         <p class="caption "> {{comment.User.name}} </p>
                         <p class="my5" > {{comment.content}} </p> 
                         <w-flex class="justify-end">
-                            <w-button @click="deleteComment(comment.id,storageSubject.id),getAllComentBySubject(storageSubject.id)" v-if="user.user.id == comentBySubject[index].User.id" class="my5 "> Supprimer mon commentaire</w-button>
+                            <w-button @click="deleteComment(comment.id,storageSubject.id),getAllComentBySubject(storageSubject.id)" v-if="user.user.id == comentBySubject[index].User.id || user.user.admin === true " class="my5 "> Supprimer mon commentaire</w-button>
                         </w-flex>
                     </w-card>
                 </w-flex>
