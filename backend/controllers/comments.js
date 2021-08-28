@@ -20,7 +20,6 @@ exports.getAllComment = async (req, res,) => {
                 },
             ],
         });
-         console.log(comment)
         res.status(200).send(comment);
     } catch (error) {
         return res.status(500).send( { error : "Une erreur c'est produite à la récupération des commentaires ! "});

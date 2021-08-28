@@ -43,13 +43,7 @@ exports.signup = async (req, res) => {
         const jwt = generateJWT(now, user.id);
         res.status(201).send({
           user: newUser,
-          token: `${jwt}`
-          // jwt.sign(
-          //   { userId : user.id},
-          //   SECRET_TOKEN,
-          //   { expiresIn : '12h'}
-          // )
-          ,
+          token: `${jwt}`,
           message: `Votre compte est bien créé ${newUser.name} !`,
         });
       }
